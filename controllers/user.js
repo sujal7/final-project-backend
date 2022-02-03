@@ -59,7 +59,10 @@ exports.signIn = (req, res, next) => {
           email: loadedUser.email,
           userId: loadedUser._id.toString(),
         },
-        process.env.SECRET
+        process.env.SECRET,
+        {
+          expiresIn: '1200s',
+        }
       );
       res.status(200).json({ token: token, userID: loadedUser._id.toString() });
     })
