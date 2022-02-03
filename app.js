@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
+require('dotenv').config();
 const port = process.env.PORT || 5000;
 const mongoose = require('mongoose');
 
@@ -10,9 +11,7 @@ app.use(bodyParser.json());
 app.use('/', userRoute);
 
 mongoose
-  .connect(
-    'mongodb+srv://sujal:Q4pkszq6HRhbBZMf@cluster0.eh1wg.mongodb.net/project?retryWrites=true&w=majority'
-  )
+  .connect(process.env.SECRET)
   .then((result) => {
     app.listen(port, () => {
       console.log('Server ready at ' + port);
