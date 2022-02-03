@@ -41,6 +41,13 @@ exports.displayContact = (req, res, next) => {
 };
 
 exports.updateContact = (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(422).json({
+      message: 'Validation Failed, entered data is incorrect.',
+      errors: errors.array(),
+    });
+  }
   Contacts.findByIdAndUpdate(req.params.id, {
     name: req.body.name,
     phone: req.body.phone,
