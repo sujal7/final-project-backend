@@ -39,3 +39,24 @@ exports.displayContact = (req, res, next) => {
       console.log(err);
     });
 };
+
+exports.updateContact = (req, res, next) => {
+  Contacts.findByIdAndUpdate(req.params.id, {
+    name: req.body.name,
+    phone: req.body.phone,
+    address: req.body.address,
+    email: req.body.email,
+  })
+    .then(() => {
+      res.status(200).send('Contact updated successfully.');
+    })
+    .catch((err) => console.log(err));
+};
+
+exports.removeContact = (req, res, next) => {
+  Contacts.findByIdAndRemove(req.params.id)
+    .then(() => {
+      res.status(200).send('Contact deleted successfully.');
+    })
+    .catch((err) => console.log(err));
+};
