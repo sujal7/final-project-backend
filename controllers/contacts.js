@@ -29,3 +29,13 @@ exports.addContact = (req, res, next) => {
       console.log(err);
     });
 };
+
+exports.displayContact = (req, res, next) => {
+  Contacts.find()
+    .then((contacts) => {
+      res.status(200).json(contacts);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
