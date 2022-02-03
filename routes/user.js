@@ -1,19 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const { body } = require('express-validator');
 
 const userController = require('../controllers/user');
+const validateUser = require('../middleware/user');
 
-router.post(
-  '/signUp',
-  [
-    body('email')
-      .isEmail()
-      .withMessage('Please enter a valid email address.')
-      .normalizeEmail(),
-    body('password').trim().isLength({ min: 5 }),
-  ],
-  userController.signUp
-);
+router.post('/signUp', validateUser, userController.signUp);
 
 module.exports = router;
