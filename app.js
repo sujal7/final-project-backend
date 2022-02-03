@@ -6,9 +6,11 @@ const port = process.env.PORT || 5000;
 const mongoose = require('mongoose');
 
 const userRoute = require('./routes/user');
+const contactsRoute = require('./routes/contacts');
 
 app.use(bodyParser.json());
 app.use('/', userRoute);
+app.use('/', contactsRoute);
 
 mongoose
   .connect(process.env.DB_CREDENTIAL)
