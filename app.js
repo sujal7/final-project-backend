@@ -11,7 +11,7 @@ app.use(bodyParser.json());
 app.use('/', userRoute);
 
 mongoose
-  .connect(process.env.SECRET)
+  .connect(process.env.DB_CREDENTIAL)
   .then((result) => {
     app.listen(port, () => {
       console.log('Server ready at ' + port);
