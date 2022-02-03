@@ -8,6 +8,16 @@ const mongoose = require('mongoose');
 const userRoute = require('./routes/user');
 const contactsRoute = require('./routes/contacts');
 
+/**
+ * Allows header so that we can pass token for authorization.
+ */
+app.use((req, res, next) => {
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  next();
+});
+
+// Authorization: Bearer token
+
 app.use(bodyParser.json());
 app.use('/', userRoute);
 app.use('/', contactsRoute);
