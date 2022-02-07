@@ -6,6 +6,10 @@ const contactsSchema = new Schema({
     type: String,
     required: true,
   },
+  photo: {
+    type: String,
+    required: true,
+  },
   phone: {
     type: Number,
     required: true,

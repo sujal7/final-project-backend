@@ -14,8 +14,11 @@ exports.addContact = (req, res, next) => {
   const phone = req.body.phone;
   const address = req.body.address;
   const email = req.body.email;
+  const photo = req.body.photo;
+  console.log(photo);
   const contacts = new Contacts({
     name: name,
+    photo: photo,
     phone: phone,
     address: address,
     email: email,
@@ -50,6 +53,7 @@ exports.updateContact = (req, res, next) => {
   }
   Contacts.findByIdAndUpdate(req.params.id, {
     name: req.body.name,
+    photo: req.body.photo,
     phone: req.body.phone,
     address: req.body.address,
     email: req.body.email,
