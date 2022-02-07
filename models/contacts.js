@@ -1,6 +1,19 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
+const phoneSchema = new Schema({
+  mobileNumber: {
+    type: Number,
+    required: true,
+  },
+  workNumber: {
+    type: Number,
+  },
+  homeNumber: {
+    type: Number,
+  },
+});
+
 const contactsSchema = new Schema({
   name: {
     type: String,
@@ -11,8 +24,7 @@ const contactsSchema = new Schema({
     required: true,
   },
   phone: {
-    type: Number,
-    required: true,
+    type: phoneSchema,
   },
   address: {
     type: String,

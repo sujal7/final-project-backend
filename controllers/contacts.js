@@ -11,7 +11,10 @@ exports.addContact = (req, res, next) => {
     });
   }
   const name = req.body.name;
-  const phone = req.body.phone;
+  // const phone = req.body.phone;
+  const mobileNumber = req.body.mobileNumber;
+  const workNumber = req.body.workNumber;
+  const homeNumber = req.body.homeNumber;
   const address = req.body.address;
   const email = req.body.email;
   const photo = req.body.photo;
@@ -19,7 +22,12 @@ exports.addContact = (req, res, next) => {
   const contacts = new Contacts({
     name: name,
     photo: photo,
-    phone: phone,
+    phone: {
+      mobileNumber: mobileNumber,
+      workNumber: workNumber,
+      homeNumber: homeNumber,
+    },
+    // phone: phone,
     address: address,
     email: email,
   });
@@ -54,7 +62,11 @@ exports.updateContact = (req, res, next) => {
   Contacts.findByIdAndUpdate(req.params.id, {
     name: req.body.name,
     photo: req.body.photo,
-    phone: req.body.phone,
+    phone: {
+      mobileNumber: req.body.mobileNumber,
+      workNumber: req.body.workNumber,
+      homeNumber: req.body.homeNumber,
+    },
     address: req.body.address,
     email: req.body.email,
   })
