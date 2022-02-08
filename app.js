@@ -1,15 +1,20 @@
 const express = require('express');
 const app = express();
-const bodyParser = require('body-parser');
-require('dotenv').config();
-const port = process.env.PORT || 5000;
 const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
 
 const userRoute = require('./routes/user');
 const contactsRoute = require('./routes/contacts');
 
+const port = process.env.PORT || 5000;
+require('dotenv').config();
+
 /**
- * Allows header so that we can pass token for authorization.
+ *
+ * Allows header so that we can pass token for authorization and send request from the client.
+ * @param {Object} req - The request sent by the user.
+ * @param {Object} res - The response sent to the user.
+ * @param {Object} next - The next middleware to be executed.
  */
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -21,12 +26,16 @@ app.use((req, res, next) => {
   next();
 });
 
-// Authorization: Bearer token
-
+// To use JSON data in the request body.
 app.use(bodyParser.json());
+
+// Use the default path for the user and contacts routes.
 app.use('/', userRoute);
 app.use('/', contactsRoute);
 
+/**
+ * Connects to Mongoose cloud database and starts the server.
+ */
 mongoose
   .connect(process.env.DB_CREDENTIAL)
   .then((result) => {

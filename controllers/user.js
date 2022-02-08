@@ -1,11 +1,20 @@
 const { validationResult } = require('express-validator');
-const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-require('dotenv').config();
+const bcrypt = require('bcryptjs');
 
 const User = require('../models/user');
 
-exports.signUp = (req, res, next) => {
+require('dotenv').config();
+
+/**
+ *
+ * Stores credentials of a new user in the database.
+ * @param {Object} req - The request sent by the user.
+ * @param {Object} res - The response sent to the user.
+ * @returns A response with status code and message along with userId.
+ */
+exports.signUp = (req, res) => {
+  // Checks if the request body is validated from the middleware.
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(422).json({
@@ -13,11 +22,14 @@ exports.signUp = (req, res, next) => {
       errors: errors.array(),
     });
   }
+
   const email = req.body.email;
   const password = req.body.password;
+  // Hashes the password.
   bcrypt
     .hash(password, 12)
     .then((hashedPassword) => {
+      // Creates a new user object with the entered data from the user.
       const user = new User({
         email: email,
         password: hashedPassword,
@@ -25,7 +37,7 @@ exports.signUp = (req, res, next) => {
       return user.save();
     })
     .then((result) => {
-      res
+      return res
         .status(200)
         .json({ message: 'User has been created.', userId: result._id });
     })
@@ -34,32 +46,51 @@ exports.signUp = (req, res, next) => {
     });
 };
 
+/**
+ *
+ * Authenticates the user and returns a JWT token.
+ * @param {Object} req - The request sent by the user.
+ * @param {Object} res - The response sent to the user.
+ * @param {Object} next - The next middleware to be executed.
+ * @returns A JWT token along with userId.
+ */
 exports.signIn = (req, res, next) => {
   const email = req.body.email;
   const password = req.body.password;
   let loadedUser;
+
+  // Finds the user from the database with email.
   User.findOne({ email: email })
     .then((user) => {
+      // If the user is not found, return an error.
       if (!user) {
         const error = new Error('The email doesnt match with any user.');
         error.statusCode = 401;
         throw error;
       }
       loadedUser = user;
+
+      // Compares the password with the hashed password in the database.
       return bcrypt.compare(password, user.password);
     })
     .then((isEqual) => {
+      // If the password is incorrect, return an error.
       if (!isEqual) {
         const error = new Error('The password you entered is incorrect.');
         error.statusCode = 401;
         throw error;
       }
+
+      // If the password is correct, return a JWT token.
       const token = jwt.sign(
         {
           email: loadedUser.email,
           userId: loadedUser._id.toString(),
         },
+        // The secret key is stored in the .env file.
         process.env.SECRET,
+
+        // The token expires in 20 minutes.
         {
           expiresIn: '1200s',
         }
